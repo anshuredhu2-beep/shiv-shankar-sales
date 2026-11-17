@@ -1,102 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Shiv Shankar Sales, Jind</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"><link rel="manifest" href="/static/manifest.json">
+    <meta charset="UTF-8">
+    <title>Shiv Shankar Sales - Smart Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 15px; background: #f4f7f6; color: #333; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #2c3e50; }
+        .summary-grid { display: flex; gap: 15px; margin-bottom: 20px; }
+        .card { flex: 1; background: #e8f5e9; padding: 15px; border-radius: 6px; border-left: 5px solid #4CAF50; }
+        .card-sales { background: #e3f2fd; border-left-color: #2196F3; }
+        .form-section { display: flex; gap: 20px; margin-bottom: 25px; background: #fafafa; padding: 15px; border-radius: 6px; border: 1px solid #ddd; }
+        .form-box { flex: 1; }
+        input, select { width: 100%; padding: 8px; margin: 5px 0 12px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #4CAF50; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; }
+        button.btn-sell { background: #2196F3; }
+        button:hover { opacity: 0.9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 25px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 14px; }
+        th { background-color: #34495e; color: white; }
+    </style>
 </head>
-<body class="container mt-4">
-    <h2>🏪 Shiv Shankar Sales, Jind - Inventory</h2>
-    <div class="mb-3"><a href="/report" class="btn btn-info text-white">📊 View Daily Report</a>
-        <a href="/add" class="btn btn-primary">➕ Add New Item</a>
-        <a href="/bill" class="btn btn-success">🛒 New Bill / Sale</a>
+<body>
+<div class="container">
+    <h1>🏪 Shiv Shankar Sales, Jind - Dashboard</h1>
+    
+    <!-- Summary Boxes -->
+    <div class="summary-grid">
+        <div class="card">
+            <h3>📦 Remaining Stock Value</h3>
+            <p style="font-size: 20px; font-weight: bold; color: #2e7d32;">₹ {{ total_stock_value }}</p>
+        </div>
+        <div class="card card-sales">
+            <h3>💰 Total Sales Revenue</h3>
+            <p style="font-size: 20px; font-weight: bold; color: #1565c0;">₹ {{ total_sales_amount }}</p>
+        </div>
     </div>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Item Name</th>
-                <th>Rate (₹)</th>
-                <th>Stock Left</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{ item['id'] }}</td>
-                <td>{{ item['name'] }}</td>
-                <td>₹{{ item['rate'] }}</td>
-                <td>{{ item['stock'] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Shiv Shankar Sales, Jind</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="container mt-4">
-    <h2>🏪 Shiv Shankar Sales, Jind - Inventory</h2>
-    <div class="mb-3">
-        <a href="/add" class="btn btn-primary">➕ Add New Item</a>
-        <a href="/bill" class="btn btn-success">🛒 New Bill / Sale</a>
+
+    <!-- Actions Forms (Add & Sell on Same Page) -->
+    <div class="form-section">
+        <!-- Quick Sale Form -->
+        <div class="form-box">
+            <h3>🧾 Quick Sale (Bill Banayein)</h3>
+            <form method="POST">
+                <input type="hidden" name="action" value="sell_item">
+                <label>Item Select Karein:</label>
+                <select name="item_id" required>
+                    <option value="">-- Item Chunein --</option>
+                    {% for item in items %}
+                        <option value="{{ item.id }}">{{ item.name }} (Stock: {{ item.stock }} | Rate: ₹{{ item.rate }})</option>
+                    {% endfor %}
+                </select>
+                <label>Quantity (Kitna becha):</label>
+                <input type="number" name="quantity" min="1" required placeholder="jaise: 2">
+                <button type="submit" class="btn-sell">Becho & Stock Ghatao</button>
+            </form>
+        </div>
+
+        <!-- Add / Restock Item Form -->
+        <div class="form-box">
+            <h3>➕ Add / Restock Item</h3>
+            <form method="POST">
+                <input type="hidden" name="action" value="add_item">
+                <label>Item Name:</label>
+                <input type="text" name="name" required placeholder="jaise: Cement / Paint">
+                <label>Rate (₹ per unit):</label>
+                <input type="number" step="0.01" name="rate" required placeholder="jaise: 350">
+                <label>Stock Quantity (Naya Stock):</label>
+                <input type="number" name="stock" required placeholder="jaise: 20">
+                <button type="submit">Item Add / Update Karein</button>
+            </form>
+        </div>
     </div>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Item Name</th>
-                <th>Rate (₹)</th>
-                <th>Stock Left</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{ item['id'] }}</td>
-                <td>{{ item['name'] }}</td>
-                <td>₹{{ item['rate'] }}</td>
-                <td>{{ item['stock'] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+
+    <!-- Inventory Table -->
+    <h2>📊 Current Inventory & Stock Left</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Item Name</th>
+            <th>Rate (₹)</th>
+            <th>Stock Left</th>
+            <th>Total Value (₹)</th>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.rate }}</td>
+            <td><strong>{{ item.stock }}</strong></td>
+            <td>₹ {{ item.rate * item.stock }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;">Koi item available nahi hai. Naya item add karein.</td></tr>
+        {% endfor %}
     </table>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Shiv Shankar Sales, Jind</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="container mt-4">
-    <h2>🏪 Shiv Shankar Sales, Jind - Inventory</h2>
-    <div class="mb-3">
-        <a href="/add" class="btn btn-primary">➕ Add New Item</a>
-        <a href="/bill" class="btn btn-success">🛒 New Bill / Sale</a>
-    </div>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Item Name</th>
-                <th>Rate (₹)</th>
-                <th>Stock Left</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{ item['id'] }}</td>
-                <td>{{ item['name'] }}</td>
-                <td>₹{{ item['rate'] }}</td>
-                <td>{{ item['stock'] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+
+    <!-- Sales History Table -->
+    <h2>📜 Today's / Recent Sales History</h2>
+    <table>
+        <tr>
+            <th>Item Sold</th>
+            <th>Quantity</th>
+            <th>Total Price (₹)</th>
+            <th>Date & Time</th>
+        </tr>
+        {% for sale in sales %}
+        <tr>
+            <td>{{ sale.item_name }}</td>
+            <td>{{ sale.quantity }}</td>
+            <td>₹ {{ sale.total_price }}</td>
+            <td>{{ sale.date }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" style="text-align:center;">Abhi tak koi sale nahi hui hai.</td></tr>
+        {% endfor %}
     </table>
+</div>
 </body>
 </html>
