@@ -85,3 +85,23 @@ def bill():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5000)
+from datetime import datetime
+
+# Sales Table Model
+class Sale(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item_name = db.Column(db.String(100), nullable=False)
+    qty_sold = db.Column(db.Integer, nullable=False)
+    total_price = db.Column(db.Float, nullable=False)
+    date = db.Column(db.String(50), nullable=False)
+
+# Report Route
+@app.route('/report')
+def report():
+    items = Item.query.all()
+    sales = Sale.query.all()
+    
+    total_stock_value = sum(item.rate * item.stock for item in items)
+    total_sales_amount = sum(sale.total_price for sale in sales)
+    
+    return render_template('report.html', items=items, sales=sales, total_stock_value=total_stock_value, total_sales_amount=total_sales_amount)
