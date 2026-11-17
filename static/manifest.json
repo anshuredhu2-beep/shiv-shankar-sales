@@ -1,0 +1,13 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Shiv Shankar Sales",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Shiv Shankar",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "id": "/",
+  "description": "Inventory and Billing Management App"
+}
