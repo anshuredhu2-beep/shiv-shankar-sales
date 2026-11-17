@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shiv Shankar Sales, Jind</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+    <h2>🏪 Shiv Shankar Sales, Jind - Inventory</h2>
+    <div class="mb-3">
+        <a href="/add" class="btn btn-primary">➕ Add New Item</a>
+        <a href="/bill" class="btn btn-success">🛒 New Bill / Sale</a>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Item Name</th>
+                <th>Rate (₹)</th>
+                <th>Stock Left</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item['id'] }}</td>
+                <td>{{ item['name'] }}</td>
+                <td>₹{{ item['rate'] }}</td>
+                <td>{{ item['stock'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shiv Shankar Sales, Jind</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+    <h2>🏪 Shiv Shankar Sales, Jind - Inventory</h2>
+    <div class="mb-3">
+        <a href="/add" class="btn btn-primary">➕ Add New Item</a>
+        <a href="/bill" class="btn btn-success">🛒 New Bill / Sale</a>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Item Name</th>
+                <th>Rate (₹)</th>
+                <th>Stock Left</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item['id'] }}</td>
+                <td>{{ item['name'] }}</td>
+                <td>₹{{ item['rate'] }}</td>
+                <td>{{ item['stock'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shiv Shankar Sales, Jind</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+    <h2>🏪 Shiv Shankar Sales, Jind - Inventory</h2>
+    <div class="mb-3">
+        <a href="/add" class="btn btn-primary">➕ Add New Item</a>
+        <a href="/bill" class="btn btn-success">🛒 New Bill / Sale</a>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Item Name</th>
+                <th>Rate (₹)</th>
+                <th>Stock Left</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item['id'] }}</td>
+                <td>{{ item['name'] }}</td>
+                <td>₹{{ item['rate'] }}</td>
+                <td>{{ item['stock'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
