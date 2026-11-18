@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Shiv Shankar Sales - Smart Dashboard</title>
+    <title>{{ current_shop }} - Dashboard</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 15px; background: #f4f7f6; color: #333; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1, h2 { color: #2c3e50; }
+        .container { max-width: 950px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        h1, h2 { color: #2c3e50; margin: 0; }
+        .btn-logout { background: #d9534f; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold; }
         .summary-grid { display: flex; gap: 15px; margin-bottom: 20px; }
         .card { flex: 1; background: #e8f5e9; padding: 15px; border-radius: 6px; border-left: 5px solid #4CAF50; }
         .card-sales { background: #e3f2fd; border-left-color: #2196F3; }
@@ -19,11 +21,21 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 25px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 14px; }
         th { background-color: #34495e; color: white; }
+        .btn-action { padding: 5px 8px; font-size: 12px; border-radius: 3px; text-decoration: none; color: white; font-weight: bold; margin-right: 3px; display: inline-block; }
+        .btn-edit { background: #f0ad4e; }
+        .btn-delete { background: #d9534f; }
+        .btn-settings { background: #5bc0de; padding: 8px 12px; font-size: 14px; text-decoration: none; color: white; border-radius: 4px; font-weight: bold; margin-right: 5px; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>🏪 Shiv Shankar Sales, Jind - Dashboard</h1>
+    <div class="header-flex">
+        <h1>🏪 {{ current_shop }}</h1>
+        <div>
+            <a href="{{ url_for('shop_settings') }}" class="btn-settings">⚙️ Settings</a>
+            <a href="{{ url_for('logout') }}" class="btn-logout">🚪 Logout</a>
+        </div>
+    </div>
     
     <!-- Summary Boxes -->
     <div class="summary-grid">
@@ -37,7 +49,7 @@
         </div>
     </div>
 
-    <!-- Actions Forms (Add & Sell on Same Page) -->
+    <!-- Actions Forms -->
     <div class="form-section">
         <!-- Quick Sale Form -->
         <div class="form-box">
@@ -63,10 +75,10 @@
             <form method="POST">
                 <input type="hidden" name="action" value="add_item">
                 <label>Item Name:</label>
-                <input type="text" name="name" required placeholder="jaise: Cement / Paint">
+                <input type="text" name="name" required placeholder="jaise: Cement / Pipe">
                 <label>Rate (₹ per unit):</label>
                 <input type="number" step="0.01" name="rate" required placeholder="jaise: 350">
-                <label>Stock Quantity (Naya Stock):</label>
+                <label>Stock Quantity:</label>
                 <input type="number" name="stock" required placeholder="jaise: 20">
                 <button type="submit">Item Add / Update Karein</button>
             </form>
@@ -82,6 +94,7 @@
             <th>Rate (₹)</th>
             <th>Stock Left</th>
             <th>Total Value (₹)</th>
+            <th>Actions</th>
         </tr>
         {% for item in items %}
         <tr>
@@ -90,14 +103,18 @@
             <td>{{ item.rate }}</td>
             <td><strong>{{ item.stock }}</strong></td>
             <td>₹ {{ item.rate * item.stock }}</td>
+            <td>
+                <a href="{{ url_for('edit_item', id=item.id) }}" class="btn-action btn-edit">Edit</a>
+                <a href="{{ url_for('delete_item', id=item.id) }}" class="btn-action btn-delete" onclick="return confirm('Kya aap sach mein ise delete karna chahte hain?');">Delete</a>
+            </td>
         </tr>
         {% else %}
-        <tr><td colspan="5" style="text-align:center;">Koi item available nahi hai. Naya item add karein.</td></tr>
+        <tr><td colspan="6" style="text-align:center;">Koi item available nahi hai. Naya item add karein.</td></tr>
         {% endfor %}
     </table>
 
     <!-- Sales History Table -->
-    <h2>📜 Today's / Recent Sales History</h2>
+    <h2>📜 Sales History</h2>
     <table>
         <tr>
             <th>Item Sold</th>
@@ -105,12 +122,12 @@
             <th>Total Price (₹)</th>
             <th>Date & Time</th>
         </tr>
-        {% for sale in sales %}
+        {% for sales_item in sales %}
         <tr>
-            <td>{{ sale.item_name }}</td>
-            <td>{{ sale.quantity }}</td>
-            <td>₹ {{ sale.total_price }}</td>
-            <td>{{ sale.date }}</td>
+            <td>{{ sales_item.item_name }}</td>
+            <td>{{ sales_item.quantity }}</td>
+            <td>₹ {{ sales_item.total_price }}</td>
+            <td>{{ sales_item.date }}</td>
         </tr>
         {% else %}
         <tr><td colspan="4" style="text-align:center;">Abhi tak koi sale nahi hui hai.</td></tr>

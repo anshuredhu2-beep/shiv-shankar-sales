@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Master Admin Panel - Shiv Shankar Sales</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 15px; background: #f4f7f6; color: #333; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        h1, h2 { color: #2c3e50; margin: 0; }
+        .btn-logout { background: #d9534f; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold; }
+        .summary-grid { display: flex; gap: 15px; margin-bottom: 20px; }
+        .card { flex: 1; background: #e8f5e9; padding: 15px; border-radius: 6px; border-left: 5px solid #4CAF50; }
+        .card-sales { background: #e3f2fd; border-left-color: #2196F3; }
+        .form-box { background: #fafafa; padding: 15px; border-radius: 6px; border: 1px solid #ddd; margin-bottom: 25px; }
+        input { width: 100%; padding: 8px; margin: 5px 0 12px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #4CAF50; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; }
+        button:hover { opacity: 0.9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 25px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 14px; }
+        th { background-color: #34495e; color: white; }
+        .btn-action { padding: 5px 8px; font-size: 12px; border-radius: 3px; text-decoration: none; color: white; font-weight: bold; margin-right: 3px; display: inline-block; }
+        .btn-edit { background: #f0ad4e; }
+        .btn-delete { background: #d9534f; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-flex">
+        <h1>👑 Master Admin Control Panel</h1>
+        <a href="{{ url_for('logout') }}" class="btn-logout">🚪 Logout</a>
+    </div>
+
+    <!-- Overall Summary -->
+    <div class="summary-grid">
+        <div class="card">
+            <h3>📦 Total Stock Value (All Shops)</h3>
+            <p style="font-size: 20px; font-weight: bold; color: #2e7d32;">₹ {{ grand_total_stock }}</p>
+        </div>
+        <div class="card card-sales">
+            <h3>💰 Total Sales Revenue (All Shops)</h3>
+            <p style="font-size: 20px; font-weight: bold; color: #1565c0;">₹ {{ grand_total_sales }}</p>
+        </div>
+    </div>
+
+    <!-- Add New Shop Form -->
+    <div class="form-box">
+        <h3>➕ Nayi Dukan / ID Banayein</h3>
+        <form method="POST">
+            <input type="hidden" name="action" value="add_shop">
+            <label>Username (Login ke liye):</label>
+            <input type="text" name="username" required placeholder="jaise: dukan4">
+            
+            <label>Password:</label>
+            <input type="text" name="password" required placeholder="Password dalein">
+            
+            <label>Dukan Ka Naam:</label>
+            <input type="text" name="shop_name" required placeholder="jaise: Shiv Shankar Sales - Branch 4">
+            
+            <button type="submit">Nayi Dukan Add Karein</button>
+        </form>
+    </div>
+
+    <!-- Shops List & Management -->
+    <h2>🏪 Saari Dukanen & Management</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Dukan Ka Naam</th>
+            <th>Password</th>
+            <th>Actions</th>
+        </tr>
+        {% for shop in shops %}
+        <tr>
+            <td>{{ shop.id }}</td>
+            <td>{{ shop.username }}</td>
+            <td><strong>{{ shop.shop_name }}</strong></td>
+            <td>{{ shop.password }}</td>
+            <td>
+                <a href="{{ url_for('admin_edit_shop', id=shop.id) }}" class="btn-action btn-edit">Edit Name/Pass</a>
+                <form method="POST" style="display:inline;" onsubmit="return confirm('Kya aap is dukan ko delete karna chahte hain?');">
+                    <input type="hidden" name="action" value="delete_shop">
+                    <input type="hidden" name="shop_id" value="{{ shop.id }}">
+                    <button type="submit" class="btn-action btn-delete" style="width:auto; padding:5px 8px;">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- All Sales History -->
+    <h2>📜 Sabhi Dukanon ki Sales History</h2>
+    <table>
+        <tr>
+            <th>Dukan Ka Naam</th>
+            <th>Item Sold</th>
+            <th>Quantity</th>
+            <th>Total Price (₹)</th>
+            <th>Date & Time</th>
+        </tr>
+        {% for sale in all_sales %}
+        <tr>
+            <td><strong>{{ sale.shop_name }}</strong></td>
+            <td>{{ sale.item_name }}</td>
+            <td>{{ sale.quantity }}</td>
+            <td>₹ {{ sale.total_price }}</td>
+            <td>{{ sale.date }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;">Abhi tak kisi bhi dukan par koi sale nahi hui hai.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>
