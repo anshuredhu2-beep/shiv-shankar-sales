@@ -20,10 +20,8 @@
     <form method="POST">
         <label>Dukan Ka Naam:</label>
         <input type="text" name="shop_name" value="{{ user.shop_name }}" required>
-        
         <label>New Password:</label>
         <input type="text" name="password" value="{{ user.password }}" required>
-        
         <button type="submit">Save Changes</button>
     </form>
     <a href="{{ url_for('index') }}" class="back">← Wapas Dashboard Par Jayein</a>

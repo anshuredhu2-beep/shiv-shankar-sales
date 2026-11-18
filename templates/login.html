@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Shiv Shankar Sales</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.1); width: 300px; }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; background: #4CAF50; color: white; border: none; padding: 10px; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #45a049; }
+        .error { color: red; font-size: 13px; text-align: center; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+<div class="login-box">
+    <h2>🔐 Shop Login</h2>
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    <form method="POST">
+        <label>Username:</label>
+        <input type="text" name="username" required placeholder="jaise: dukan1 ya admin">
+        <label>Password:</label>
+        <input type="password" name="password" required placeholder="Password dalein">
+        <button type="submit">Login Karein</button>
+    </form>
+</div>
+</body>
+</html>

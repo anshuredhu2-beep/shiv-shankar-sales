@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Item - Shiv Shankar Sales</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 320px; }
+        h2 { color: #2c3e50; text-align: center; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; background: #2196F3; color: white; border: none; padding: 10px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        button:hover { opacity: 0.9; }
+        .back { display: block; text-align: center; margin-top: 15px; text-decoration: none; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>✏️ Item Edit Karein</h2>
+    <form method="POST">
+        <label>Item Name:</label>
+        <input type="text" name="name" value="{{ item.name }}" required>
+        <label>Rate (₹):</label>
+        <input type="number" step="0.01" name="rate" value="{{ item.rate }}" required>
+        <label>Stock Quantity:</label>
+        <input type="number" name="stock" value="{{ item.stock }}" required>
+        <button type="submit">Update Karein</button>
+    </form>
+    <a href="{{ url_for('index') }}" class="back">← Wapas Jayein</a>
+</div>
+</body>
+</html>
