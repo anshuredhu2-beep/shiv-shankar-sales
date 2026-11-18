@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
+import os
 
 app = Flask(__name__)
 app.secret_key = 'shiv_shankar_master_secret_key_999'
@@ -41,7 +42,7 @@ def init_db():
         )
     ''')
     
-    # Default Master Admin (Username: admin, Password: admin123)
+    # Default Master Admin
     admin_exist = conn.execute('SELECT * FROM users WHERE username = ?', ('admin',)).fetchone()
     if not admin_exist:
         conn.execute('INSERT INTO users (username, password, shop_name, role) VALUES (?, ?, ?, ?)', 
@@ -94,7 +95,6 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-# --- SHOP OWNER DASHBOARD ---
 @app.route('/', methods=('GET', 'POST'))
 def index():
     if 'user_id' not in session or session.get('role') != 'shop':
@@ -184,7 +184,6 @@ def delete_item(id):
     conn.close()
     return redirect(url_for('index'))
 
-# Shop owner apne credentials change kar sake
 @app.route('/settings', methods=('GET', 'POST'))
 def shop_settings():
     if 'user_id' not in session or session.get('role') != 'shop':
@@ -198,7 +197,6 @@ def shop_settings():
         new_password = request.form['password'].strip()
         
         conn.execute('UPDATE users SET shop_name = ?, password = ? WHERE id = ?', (new_shop_name, new_password, session['user_id']))
-        # Update items & sales shop_name reference if name changed
         conn.execute('UPDATE items SET shop_name = ? WHERE shop_name = ?', (new_shop_name, user['shop_name']))
         conn.execute('UPDATE sales SET shop_name = ? WHERE shop_name = ?', (new_shop_name, user['shop_name']))
         conn.commit()
@@ -209,8 +207,6 @@ def shop_settings():
     conn.close()
     return render_template('settings.html', user=user)
 
-
-# --- MASTER ADMIN DASHBOARD ---
 @app.route('/admin', methods=('GET', 'POST'))
 def admin_dashboard():
     if 'user_id' not in session or session.get('role') != 'admin':
@@ -224,13 +220,12 @@ def admin_dashboard():
             username = request.form['username'].strip()
             password = request.form['password'].strip()
             shop_name = request.form['shop_name'].strip()
-            
             try:
                 conn.execute('INSERT INTO users (username, password, shop_name, role) VALUES (?, ?, ?, ?)',
                              (username, password, shop_name, 'shop'))
                 conn.commit()
             except sqlite3.IntegrityError:
-                pass # Username already exists
+                pass
                 
         elif action == 'delete_shop':
             shop_id = request.form['shop_id']
@@ -256,7 +251,6 @@ def admin_dashboard():
                            grand_total_sales=grand_total_sales, 
                            grand_total_stock=grand_total_stock)
 
-# Admin can edit any shop's details
 @app.route('/admin/edit_shop/<int:id>', methods=('GET', 'POST'))
 def admin_edit_shop(id):
     if 'user_id' not in session or session.get('role') != 'admin':
@@ -280,4 +274,5 @@ def admin_edit_shop(id):
     return render_template('admin_edit.html', shop=shop)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
